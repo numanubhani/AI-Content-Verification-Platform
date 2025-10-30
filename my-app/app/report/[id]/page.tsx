@@ -21,25 +21,25 @@ export default function ReportPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col items-center gap-6 rounded-2xl border p-6 md:flex-row md:items-stretch">
-        <div className="grid flex-1 place-items-center">
-          <div className="h-56 w-56">
+      <div className="grid gap-6 rounded-2xl border p-6 md:grid-cols-2">
+        <div className="relative flex items-center justify-center">
+          <div className="h-60 w-60">
             <ResponsiveContainer>
-              <RadialBarChart innerRadius="70%" outerRadius="100%" data={[{ name: "score", value: trust }]}> 
-                <RadialBar background dataKey="value" fill="#22c55e" cornerRadius={10} />
+              <RadialBarChart innerRadius="72%" outerRadius="100%" data={[{ name: "score", value: trust }]}> 
+                <RadialBar background dataKey="value" fill="#22c55e" cornerRadius={12} />
               </RadialBarChart>
             </ResponsiveContainer>
           </div>
-          <div className="-mt-24 text-center">
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
             <div className="text-3xl font-bold">{trust}%</div>
             <div className="text-sm text-foreground/70">Human-made confidence</div>
           </div>
         </div>
-        <div className="flex-1 space-y-2">
+        <div className="space-y-3">
           <h1 className="text-xl font-semibold">Report #{id}</h1>
           <p className="text-foreground/70">Label: <span className="font-medium">Partially AI-assisted</span></p>
           <p className="text-foreground/70">Summary: Mixed human and AI signals detected across modalities.</p>
-          <div className="pt-3">
+          <div className="pt-1">
             <button className="rounded-full border px-4 py-2 hover:bg-foreground/5">Re-check</button>
             <button className="ml-3 rounded-full bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700">Copy Share Link</button>
           </div>
@@ -49,10 +49,10 @@ export default function ReportPage() {
       <div className="grid gap-6 md:grid-cols-2">
         <div className="rounded-2xl border p-6">
           <h2 className="text-lg font-medium">Overview</h2>
-          <div className="mt-4 h-60">
+          <div className="mt-4 h-56">
             <ResponsiveContainer>
               <PieChart>
-                <Pie data={radialData} outerRadius={80} dataKey="value" label>
+                <Pie data={radialData} outerRadius={80} dataKey="value">
                   {radialData.map((_, index) => (
                     <Cell key={index} fill={index === 0 ? "#22c55e" : "#ef4444"} />
                   ))}
@@ -63,7 +63,7 @@ export default function ReportPage() {
         </div>
         <div className="rounded-2xl border p-6">
           <h2 className="text-lg font-medium">Breakdown</h2>
-          <div className="mt-4 h-60">
+          <div className="mt-4 h-56">
             <ResponsiveContainer>
               <BarChart data={breakdown}>
                 <XAxis dataKey="name" />
@@ -84,8 +84,8 @@ export default function ReportPage() {
             detected in the following sentences…
           </div>
           <div className="grid gap-4">
-            <div className="h-32 rounded-xl border bg-gradient-to-br from-transparent via-emerald-500/20 to-transparent" />
-            <div className="h-32 rounded-xl border bg-gradient-to-br from-transparent via-sky-500/20 to-transparent" />
+            <div className="h-36 rounded-xl border bg-gradient-to-br from-transparent via-emerald-500/20 to-transparent" />
+            <div className="h-36 rounded-xl border bg-gradient-to-br from-transparent via-sky-500/20 to-transparent" />
           </div>
         </div>
       </div>

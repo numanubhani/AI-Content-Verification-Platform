@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import { useHistoryStore } from "@/store/history";
 
 const Dashboard = dynamic(() => import("@/components/upload-dashboard"), { ssr: false });
 
@@ -18,6 +19,7 @@ export default function UploadPage() {
   const [statusByKind, setStatusByKind] = useState<Record<"text" | "image" | "video", Status>>({ text: "idle", image: "idle", video: "idle" });
   const [resultByKind, setResultByKind] = useState<Record<"text" | "image" | "video", Result | null>>({ text: null, image: null, video: null });
   const [textInput, setTextInput] = useState("");
+  const addHistory = useHistoryStore((s) => s.add);
   const router = useRouter();
 
   async function simulateAnalysis(kind: "text" | "image" | "video") {
@@ -28,6 +30,7 @@ export default function UploadPage() {
       const mock: Result = { label: json.label, trust_score: json.trust_score, details: json.details };
       setResultByKind((r) => ({ ...r, [kind]: mock }));
       setStatusByKind((s) => ({ ...s, [kind]: "completed" }));
+      addHistory({ id: json.id, kind, label: mock.label, trust_score: mock.trust_score, createdAt: Date.now() });
     } catch (e) {
       setStatusByKind((s) => ({ ...s, [kind]: "idle" }));
     }

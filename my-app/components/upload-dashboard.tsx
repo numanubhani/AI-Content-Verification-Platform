@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import Uppy from "@uppy/core";
 import Dashboard from "@uppy/dashboard";
-import XHRUpload from "@uppy/xhr-upload";
+// We mock upload client-side to avoid browser XHR progress/runtime quirks
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
 
@@ -26,23 +26,39 @@ export default function UploadDashboard({
           kind === "text" ? [".txt", ".md", ".pdf"] : kind === "image" ? ["image/*"] : ["video/*"],
       },
     })
-      .use(XHRUpload, { endpoint: "/api/upload", method: "POST" })
       .use(Dashboard, {
         inline: true,
         target: "#uppy-root-" + kind,
         height: 320,
         showProgressDetails: true,
+        hideUploadButton: true,
         note: kind === "text" ? "TXT, MD, PDF" : kind === "image" ? "Images" : "Videos",
         proudlyDisplayPoweredByUppy: false,
       });
 
     uppyRef.current = uppy;
 
-    uppy.on("upload", () => onStart());
-    uppy.on("complete", () => onComplete());
+    // Trigger a mocked analyze flow when files are added
+    uppy.on("files-added", () => {
+      onStart();
+      // brief delay to emulate upload then analysis
+      setTimeout(() => onComplete(), 600);
+    });
 
     return () => {
-      uppy.close();
+      try {
+        const dash: any = uppy.getPlugin('Dashboard');
+        if (dash && typeof dash.close === 'function') {
+          dash.close();
+        }
+        if (typeof uppy.cancelAll === 'function') {
+          uppy.cancelAll();
+        }
+      } finally {
+        if (typeof uppy.destroy === 'function') {
+          uppy.destroy();
+        }
+      }
     };
   }, [kind, onStart, onComplete]);
 

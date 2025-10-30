@@ -3,7 +3,24 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <div className="space-y-16">
-      <section className="relative overflow-hidden rounded-2xl border bg-gradient-to-br from-emerald-50 to-white p-10 dark:from-slate-900 dark:to-slate-950">
+      <section className="relative overflow-hidden rounded-2xl border p-10 bg-background">
+        {/* Background accents */}
+        <div className="pointer-events-none absolute inset-0">
+          {/* soft grid */}
+          <div
+            className="absolute inset-0 opacity-[0.06] dark:opacity-[0.08]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
+              backgroundSize: "28px 28px",
+              color: "#0f172a",
+            }}
+          />
+          {/* radial orbs */}
+          <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-emerald-400/30 blur-3xl dark:bg-emerald-500/20" />
+          <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-sky-400/30 blur-3xl dark:bg-sky-500/20" />
+        </div>
+
         <div className="relative z-10 max-w-3xl">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
             AI Content Verification for Media & Education
@@ -15,12 +32,11 @@ export default function HomePage() {
             <Link href="/upload" className="rounded-full bg-emerald-600 px-5 py-2.5 text-white shadow hover:bg-emerald-700">
               Try Free for Schools
             </Link>
-            <Link href="/contact" className="rounded-full border px-5 py-2.5 hover:bg-foreground/5">
+            <Link href="/contact" className="rounded-full border border-foreground/20 bg-background/60 px-5 py-2.5 text-foreground backdrop-blur hover:bg-foreground/10">
               See API for Media
             </Link>
           </div>
         </div>
-        <div className="pointer-events-none absolute inset-0 opacity-40 [background:radial-gradient(600px_circle_at_0_0,#10b981_0,transparent_60%),radial-gradient(600px_circle_at_100%_100%,#22d3ee_0,transparent_60%)]" />
       </section>
 
       <section>
