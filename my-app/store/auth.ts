@@ -3,14 +3,15 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type User = { id: string; email: string; plan: "free" | "basic" | "pro" | "suite" | "enterprise" } | null;
+type Plan = "free" | "basic" | "pro" | "suite" | "enterprise";
+type User = { id: string; email: string; plan: Plan };
 
 type AuthState = {
-  user: User;
+  user: User | null;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  setPlan: (plan: User extends null ? never : User["plan"]) => void;
+  setPlan: (plan: Plan) => void;
 };
 
 export const useAuthStore = create<AuthState>()(
