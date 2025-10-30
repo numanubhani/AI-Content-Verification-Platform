@@ -14,7 +14,7 @@ export default function PricingPage() {
   return (
     <div>
       <h1 className="text-2xl font-semibold">Pricing</h1>
-      <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {plans.map((p) => (
           <div key={p.name} className="rounded-2xl border p-6 shadow-sm transition hover:shadow-md">
             <h3 className="text-lg font-medium">{p.name}</h3>

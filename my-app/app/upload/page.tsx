@@ -40,7 +40,7 @@ export default function UploadPage() {
     <div className="space-y-8">
       <h1 className="text-2xl font-semibold">Upload</h1>
       <Tabs.Root defaultValue="text" className="w-full">
-        <Tabs.List className="flex gap-2 rounded-full bg-foreground/5 p-1">
+        <Tabs.List className="flex gap-2 overflow-x-auto rounded-full bg-foreground/5 p-1">
           {[
             { v: "text", l: "Text" },
             { v: "image", l: "Image" },
@@ -49,7 +49,7 @@ export default function UploadPage() {
             <Tabs.Trigger
               key={t.v}
               value={t.v}
-              className="rounded-full px-4 py-2 text-sm data-[state=active]:bg-background data-[state=active]:shadow data-[state=active]:ring-1 data-[state=active]:ring-foreground/10"
+              className="whitespace-nowrap rounded-full px-4 py-2 text-sm data-[state=active]:bg-background data-[state=active]:shadow data-[state=active]:ring-1 data-[state=active]:ring-foreground/10"
             >
               {t.l}
             </Tabs.Trigger>

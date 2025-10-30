@@ -28,11 +28,11 @@ export default function HomePage() {
           <p className="mt-4 text-lg text-foreground/70">
             Check text, photos, and videos for AI usage.
           </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/upload" className="rounded-full bg-emerald-600 px-5 py-2.5 text-white shadow hover:bg-emerald-700">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+            <Link href="/upload" className="w-full rounded-full bg-emerald-600 px-5 py-2.5 text-center text-white shadow hover:bg-emerald-700 sm:w-auto">
               Try Free for Schools
             </Link>
-            <Link href="/contact" className="rounded-full border border-foreground/20 bg-background/60 px-5 py-2.5 text-foreground backdrop-blur hover:bg-foreground/10">
+            <Link href="/contact" className="w-full rounded-full border border-foreground/20 bg-background/60 px-5 py-2.5 text-center text-foreground backdrop-blur hover:bg-foreground/10 sm:w-auto">
               See API for Media
             </Link>
           </div>
