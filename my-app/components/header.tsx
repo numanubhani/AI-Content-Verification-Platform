@@ -33,6 +33,8 @@ export function Header() {
             )}
             <ThemeToggle />
           </nav>
+          {/* Mobile: show theme toggle to the left of hamburger */}
+          <div className="sm:hidden"><ThemeToggle /></div>
           <button
             className="inline-flex items-center rounded-lg border px-2 py-1 sm:hidden"
             aria-label="Open menu"
@@ -57,7 +59,6 @@ export function Header() {
             ) : (
               <Link href="/auth" className="py-1" onClick={() => setOpen(false)}>Login</Link>
             )}
-            <div className="pt-2"><ThemeToggle /></div>
           </nav>
         </div>
       )}
