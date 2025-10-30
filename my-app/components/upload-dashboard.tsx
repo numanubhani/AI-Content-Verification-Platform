@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import Uppy from "@uppy/core";
 import Dashboard from "@uppy/dashboard";
 // We mock upload client-side to avoid browser XHR progress/runtime quirks
@@ -16,8 +16,6 @@ export default function UploadDashboard({
   onStart: () => void;
   onComplete: () => void;
 }) {
-  const uppyRef = useRef<Uppy.Uppy | null>(null);
-
   useEffect(() => {
     const uppy = new Uppy({
       autoProceed: false,
@@ -35,8 +33,6 @@ export default function UploadDashboard({
         note: kind === "text" ? "TXT, MD, PDF" : kind === "image" ? "Images" : "Videos",
         proudlyDisplayPoweredByUppy: false,
       });
-
-    uppyRef.current = uppy;
 
     // Trigger a mocked analyze flow when files are added
     uppy.on("files-added", () => {
