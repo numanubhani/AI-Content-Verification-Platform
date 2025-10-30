@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Github, Twitter, Mail } from "lucide-react";
 
+
 export function Footer() {
   return (
     <footer className="mt-16 border-t">
