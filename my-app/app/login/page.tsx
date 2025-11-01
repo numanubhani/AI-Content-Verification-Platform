@@ -1,14 +1,27 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuthStore } from "@/store/auth";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const user = useAuthStore((s) => s.user);
   const login = useAuthStore((s) => s.login);
   const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      // Redirect admins to admin dashboard, others to user dashboard
+      if (user.plan === "enterprise") {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
+    }
+  }, [user, router]);
+
   return (
     <div className="mx-auto max-w-md">
       <h1 className="text-2xl font-semibold">Log in</h1>
@@ -16,7 +29,6 @@ export default function LoginPage() {
         onSubmit={async (e) => {
           e.preventDefault();
           await login(email, password);
-          router.push("/dashboard/history");
         }}
         className="mt-6 space-y-4 rounded-2xl border p-6"
       >

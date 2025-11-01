@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 
@@ -8,6 +8,7 @@ export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const user = useAuthStore((s) => s.user);
   const login = useAuthStore((s) => s.login);
   const signup = useAuthStore((s) => s.signup);
   const router = useRouter();
@@ -19,8 +20,18 @@ export default function AuthPage() {
     } else {
       await signup(email, password);
     }
-    router.push("/dashboard/history");
   }
+
+  useEffect(() => {
+    if (user) {
+      // Redirect admins to admin dashboard, others to user dashboard
+      if (user.plan === "enterprise") {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
+    }
+  }, [user, router]);
 
   return (
     <div className="mx-auto max-w-md">

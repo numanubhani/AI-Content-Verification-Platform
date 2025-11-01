@@ -14,15 +14,20 @@ type AuthState = {
   setPlan: (plan: Plan) => void;
 };
 
+// Admin emails that get enterprise plan access
+const ADMIN_EMAILS = ["admin@aiverify.com", "admin@example.com", "admin@gmail.com"];
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       user: null,
       async login(email) {
-        set({ user: { id: "u-" + Date.now(), email, plan: "free" } });
+        const plan = ADMIN_EMAILS.includes(email.toLowerCase()) ? "enterprise" as Plan : "free" as Plan;
+        set({ user: { id: "u-" + Date.now(), email, plan } });
       },
       async signup(email) {
-        set({ user: { id: "u-" + Date.now(), email, plan: "free" } });
+        const plan = ADMIN_EMAILS.includes(email.toLowerCase()) ? "enterprise" as Plan : "free" as Plan;
+        set({ user: { id: "u-" + Date.now(), email, plan } });
       },
       logout() {
         set({ user: null });

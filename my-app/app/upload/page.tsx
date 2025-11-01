@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -27,6 +27,8 @@ export default function UploadPage() {
   const router = useRouter();
   const pasteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const statusByKindRef = useRef(statusByKind);
   
   // Usage tracking
   const user = useAuthStore((s) => s.user);
@@ -34,6 +36,11 @@ export default function UploadPage() {
   const incrementUsage = useUsageStore((s) => s.incrementUsage);
   const analysisCount = useUsageStore((s) => s.analysisCount);
   const freeLimit = useUsageStore((s) => s.freeLimit);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    statusByKindRef.current = statusByKind;
+  }, [statusByKind]);
 
   async function simulateAnalysis(kind: "text" | "image" | "video") {
     // Check if limit reached (only for free users)
@@ -65,13 +72,13 @@ export default function UploadPage() {
   return (
     <div className="space-y-8">
       <div>
-        <div className="flex items-start justify-between mb-2">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-2">
           <div>
             <h1 className="text-4xl font-bold tracking-tight mb-2">Content Verification</h1>
             <p className="text-lg text-foreground/70">Upload or paste your content to verify authenticity instantly</p>
           </div>
           {(!user || user.plan === "free") && (
-            <div className="rounded-full border-2 border-purple-600/20 bg-purple-600/5 dark:bg-purple-950/20 px-4 py-2">
+            <div className="rounded-full border-2 border-purple-600/20 bg-purple-600/5 dark:bg-purple-950/20 px-4 py-2 w-fit">
               <span className="text-sm font-medium text-foreground/70">
                 Free: <span className="text-purple-600 font-semibold">{freeLimit - analysisCount} left</span>
               </span>
@@ -103,6 +110,7 @@ export default function UploadPage() {
                 <div className="rounded-2xl border-2 border-purple-600/20 bg-white dark:bg-gray-900 p-6">
                   <label className="block text-sm font-medium mb-3">Paste text to analyze</label>
                   <textarea
+                    ref={textareaRef}
                     value={textInput}
                     onChange={(e) => {
                       const newValue = e.target.value;
@@ -113,30 +121,30 @@ export default function UploadPage() {
                         clearTimeout(typingTimeoutRef.current);
                       }
                       
-                      // Auto-analyze after user stops typing for 2 seconds (if content > 100 chars)
-                      if (newValue.length > 100 && statusByKind.text === "idle") {
+                      // Auto-analyze after user stops typing for 3 seconds (if content > 20 chars)
+                      if (newValue.length > 20 && statusByKindRef.current.text === "idle") {
                         typingTimeoutRef.current = setTimeout(() => {
                           setStatusByKind((s) => ({ ...s, text: "uploading" }));
                           simulateAnalysis("text");
-                        }, 2000);
+                        }, 3000);
                       }
                     }}
                     onPaste={(e) => {
-                      // Auto-analyze on paste after a short delay
+                      // Auto-analyze on paste after 3 seconds delay
                       if (pasteTimeoutRef.current) {
                         clearTimeout(pasteTimeoutRef.current);
                       }
                       pasteTimeoutRef.current = setTimeout(() => {
                         // Read the textarea value after paste event completes
-                        const target = e.target as HTMLTextAreaElement;
-                        if (target.value.length > 100 && statusByKind.text === "idle") {
+                        const textValue = textareaRef.current?.value || "";
+                        if (textValue.length > 20 && statusByKindRef.current.text === "idle") {
                           if (typingTimeoutRef.current) {
                             clearTimeout(typingTimeoutRef.current);
                           }
                           setStatusByKind((s) => ({ ...s, text: "uploading" }));
                           simulateAnalysis("text");
                         }
-                      }, 500);
+                      }, 3000);
                     }}
                     rows={10}
                     className="w-full rounded-xl border border-purple-600/20 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-600/50 transition-all"

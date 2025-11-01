@@ -25,7 +25,6 @@ export function Header() {
             <Link href="/about" className="hover:opacity-80">About</Link>
             {user ? (
               <>
-                <Link href="/dashboard/history" className="hover:opacity-80">Dashboard</Link>
                 <button onClick={logout} className="rounded-full border px-3 py-1 hover:bg-foreground/5">Logout</button>
               </>
             ) : (
@@ -53,7 +52,6 @@ export function Header() {
             <Link href="/about" className="py-1" onClick={() => setOpen(false)}>About</Link>
             {user ? (
               <>
-                <Link href="/dashboard/history" className="py-1" onClick={() => setOpen(false)}>Dashboard</Link>
                 <button onClick={() => { logout(); setOpen(false); }} className="rounded-full border px-3 py-1">Logout</button>
               </>
             ) : (
