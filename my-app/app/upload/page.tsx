@@ -5,6 +5,9 @@ import * as Tabs from "@radix-ui/react-tabs";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useHistoryStore } from "@/store/history";
+import { useUsageStore } from "@/store/usage";
+import { useAuthStore } from "@/store/auth";
+import { LimitModal } from "@/components/limit-modal";
 
 const Dashboard = dynamic(() => import("@/components/upload-dashboard"), { ssr: false });
 
@@ -19,12 +22,33 @@ export default function UploadPage() {
   const [statusByKind, setStatusByKind] = useState<Record<"text" | "image" | "video", Status>>({ text: "idle", image: "idle", video: "idle" });
   const [resultByKind, setResultByKind] = useState<Record<"text" | "image" | "video", Result | null>>({ text: null, image: null, video: null });
   const [textInput, setTextInput] = useState("");
+  const [showLimitModal, setShowLimitModal] = useState(false);
   const addHistory = useHistoryStore((s) => s.add);
   const router = useRouter();
   const pasteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Usage tracking
+  const user = useAuthStore((s) => s.user);
+  const checkLimitReached = useUsageStore((s) => s.checkLimitReached);
+  const incrementUsage = useUsageStore((s) => s.incrementUsage);
+  const analysisCount = useUsageStore((s) => s.analysisCount);
+  const freeLimit = useUsageStore((s) => s.freeLimit);
 
   async function simulateAnalysis(kind: "text" | "image" | "video") {
+    // Check if limit reached (only for free users)
+    const isPaidUser = user && user.plan !== "free";
+    if (!isPaidUser && checkLimitReached()) {
+      setShowLimitModal(true);
+      setStatusByKind((s) => ({ ...s, [kind]: "idle" }));
+      return;
+    }
+
+    // Increment usage counter (only for free users)
+    if (!isPaidUser) {
+      incrementUsage();
+    }
+
     setStatusByKind((s) => ({ ...s, [kind]: "analyzing" }));
     try {
       const res = await fetch(`/api/analyze?kind=${kind}`);
@@ -41,8 +65,19 @@ export default function UploadPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-bold tracking-tight mb-2">Content Verification</h1>
-        <p className="text-lg text-foreground/70">Upload or paste your content to verify authenticity instantly</p>
+        <div className="flex items-start justify-between mb-2">
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight mb-2">Content Verification</h1>
+            <p className="text-lg text-foreground/70">Upload or paste your content to verify authenticity instantly</p>
+          </div>
+          {(!user || user.plan === "free") && (
+            <div className="rounded-full border-2 border-purple-600/20 bg-purple-600/5 dark:bg-purple-950/20 px-4 py-2">
+              <span className="text-sm font-medium text-foreground/70">
+                Free: <span className="text-purple-600 font-semibold">{freeLimit - analysisCount} left</span>
+              </span>
+            </div>
+          )}
+        </div>
       </div>
       <Tabs.Root defaultValue="text" className="w-full">
         <Tabs.List className="flex gap-2 overflow-x-auto rounded-full bg-purple-600/10 p-1 border border-purple-600/20">
@@ -175,6 +210,14 @@ export default function UploadPage() {
           </Tabs.Content>
         ))}
       </Tabs.Root>
+
+      {/* Free Limit Modal */}
+      <LimitModal
+        isOpen={showLimitModal}
+        onClose={() => setShowLimitModal(false)}
+        currentCount={analysisCount}
+        limit={freeLimit}
+      />
     </div>
   );
 }

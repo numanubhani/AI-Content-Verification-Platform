@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
+import { FingerprintProvider } from '@/components/fingerprint-provider';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 
@@ -14,11 +15,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen bg-background text-foreground antialiased">
         <ThemeProvider>
-          <Header />
-          <main className="mx-auto max-w-6xl px-4 py-8">
-            {children}
-          </main>
-          <Footer />
+          <FingerprintProvider>
+            <Header />
+            <main className="mx-auto max-w-6xl px-4 py-8">
+              {children}
+            </main>
+            <Footer />
+          </FingerprintProvider>
         </ThemeProvider>
       </body>
     </html>
