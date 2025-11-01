@@ -58,7 +58,11 @@ export default function UploadDashboard({
     };
   }, [kind, onStart, onComplete]);
 
-  return <div id={"uppy-root-" + kind} className="rounded-xl border p-2" />;
+  return (
+    <div className="rounded-2xl border-2 border-purple-600/20 bg-white dark:bg-gray-900 p-2 overflow-hidden">
+      <div id={"uppy-root-" + kind} />
+    </div>
+  );
 }
 
 

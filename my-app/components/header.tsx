@@ -14,7 +14,7 @@ export function Header() {
     <header className="sticky top-0 z-30 w-full border-b backdrop-blur bg-background/80">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="inline-block h-5 w-5 rounded bg-gradient-to-br from-emerald-500 to-sky-500" />
+          <span className="inline-block h-5 w-5 rounded bg-purple-600" />
           <span>AI Verify</span>
         </Link>
         <div className="flex items-center gap-3">

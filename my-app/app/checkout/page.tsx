@@ -11,7 +11,7 @@ export default function CheckoutPage() {
   const router = useRouter();
 
   if (!plan) {
-    return <div className="rounded-2xl border p-8">No plan selected. Go to <a className="text-emerald-600 underline" href="/pricing">Pricing</a>.</div>;
+    return <div className="rounded-2xl border p-8">No plan selected. Go to <a className="text-purple-600 underline" href="/pricing">Pricing</a>.</div>;
   }
 
   return (
@@ -26,7 +26,7 @@ export default function CheckoutPage() {
             setPlan(plan as any);
             router.push('/dashboard/history');
           }}
-          className="mt-6 w-full rounded-full bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
+          className="mt-6 w-full rounded-full bg-purple-600 px-4 py-2 text-white hover:bg-purple-700"
         >
           Confirm and Activate
         </button>

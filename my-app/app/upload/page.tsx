@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState, useRef } from "react";
 import * as Tabs from "@radix-ui/react-tabs";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,8 @@ export default function UploadPage() {
   const [textInput, setTextInput] = useState("");
   const addHistory = useHistoryStore((s) => s.add);
   const router = useRouter();
+  const pasteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   async function simulateAnalysis(kind: "text" | "image" | "video") {
     setStatusByKind((s) => ({ ...s, [kind]: "analyzing" }));
@@ -38,9 +40,12 @@ export default function UploadPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-2xl font-semibold">Upload</h1>
+      <div>
+        <h1 className="text-4xl font-bold tracking-tight mb-2">Content Verification</h1>
+        <p className="text-lg text-foreground/70">Upload or paste your content to verify authenticity instantly</p>
+      </div>
       <Tabs.Root defaultValue="text" className="w-full">
-        <Tabs.List className="flex gap-2 overflow-x-auto rounded-full bg-foreground/5 p-1">
+        <Tabs.List className="flex gap-2 overflow-x-auto rounded-full bg-purple-600/10 p-1 border border-purple-600/20">
           {[
             { v: "text", l: "Text" },
             { v: "image", l: "Image" },
@@ -49,7 +54,7 @@ export default function UploadPage() {
             <Tabs.Trigger
               key={t.v}
               value={t.v}
-              className="whitespace-nowrap rounded-full px-4 py-2 text-sm data-[state=active]:bg-background data-[state=active]:shadow data-[state=active]:ring-1 data-[state=active]:ring-foreground/10"
+              className="whitespace-nowrap rounded-full px-6 py-2.5 text-sm font-medium data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=inactive]:text-foreground/70 transition-all"
             >
               {t.l}
             </Tabs.Trigger>
@@ -57,30 +62,51 @@ export default function UploadPage() {
         </Tabs.List>
 
         {(["text", "image", "video"] as const).map((kind) => (
-          <Tabs.Content key={kind} value={kind} className="mt-4 space-y-4">
+          <Tabs.Content key={kind} value={kind} className="mt-6">
             {kind === "text" ? (
               <div className="space-y-4">
-                <div className="rounded-xl border p-4">
-                  <label className="block text-sm mb-2">Paste text to analyze</label>
+                <div className="rounded-2xl border-2 border-purple-600/20 bg-white dark:bg-gray-900 p-6">
+                  <label className="block text-sm font-medium mb-3">Paste text to analyze</label>
                   <textarea
                     value={textInput}
-                    onChange={(e) => setTextInput(e.target.value)}
-                    rows={8}
-                    className="w-full rounded-lg border px-3 py-2"
-                    placeholder="Paste or type your text here..."
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      setTextInput(newValue);
+                      
+                      // Clear any existing timeout
+                      if (typingTimeoutRef.current) {
+                        clearTimeout(typingTimeoutRef.current);
+                      }
+                      
+                      // Auto-analyze after user stops typing for 2 seconds (if content > 100 chars)
+                      if (newValue.length > 100 && statusByKind.text === "idle") {
+                        typingTimeoutRef.current = setTimeout(() => {
+                          setStatusByKind((s) => ({ ...s, text: "uploading" }));
+                          simulateAnalysis("text");
+                        }, 2000);
+                      }
+                    }}
+                    onPaste={(e) => {
+                      // Auto-analyze on paste after a short delay
+                      if (pasteTimeoutRef.current) {
+                        clearTimeout(pasteTimeoutRef.current);
+                      }
+                      pasteTimeoutRef.current = setTimeout(() => {
+                        // Read the textarea value after paste event completes
+                        const target = e.target as HTMLTextAreaElement;
+                        if (target.value.length > 100 && statusByKind.text === "idle") {
+                          if (typingTimeoutRef.current) {
+                            clearTimeout(typingTimeoutRef.current);
+                          }
+                          setStatusByKind((s) => ({ ...s, text: "uploading" }));
+                          simulateAnalysis("text");
+                        }
+                      }, 500);
+                    }}
+                    rows={10}
+                    className="w-full rounded-xl border border-purple-600/20 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-600/50 transition-all"
+                    placeholder="Paste or type your text here... Analysis starts automatically!"
                   />
-                  <div className="mt-3 flex gap-2">
-                    <button
-                      onClick={() => {
-                        if (!textInput.trim()) return;
-                        setStatusByKind((s) => ({ ...s, text: "uploading" }));
-                        simulateAnalysis("text");
-                      }}
-                      className="rounded-full bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
-                    >
-                      Analyze Text
-                    </button>
-                  </div>
                 </div>
               </div>
             ) : (
@@ -91,20 +117,59 @@ export default function UploadPage() {
               />
             )}
 
-            <div className="rounded-xl border p-4">
-              <p className="text-sm">Status: <span className="font-medium capitalize">{statusByKind[kind]}</span></p>
-            </div>
+            {statusByKind[kind] !== "idle" && (
+              <div className="rounded-2xl border-2 border-purple-600/20 bg-white dark:bg-gray-900 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm font-medium uppercase tracking-wide text-foreground/70">Status</span>
+                  <span className="inline-flex items-center gap-2 rounded-full bg-purple-600/10 px-3 py-1 text-sm font-medium text-purple-600">
+                    {statusByKind[kind] === "analyzing" && <span className="animate-spin">⚙️</span>}
+                    {statusByKind[kind] === "completed" && "✓"}
+                    {statusByKind[kind] === "uploading" && "↑"}
+                    <span className="capitalize">{statusByKind[kind]}</span>
+                  </span>
+                </div>
+                {statusByKind[kind] === "analyzing" && (
+                  <div className="space-y-2">
+                    <p className="text-sm text-foreground/70">Analyzing content with advanced AI models...</p>
+                    <div className="h-2 w-full bg-purple-600/10 rounded-full overflow-hidden">
+                      <div className="h-full bg-purple-600 animate-pulse" style={{ width: '60%' }} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {statusByKind[kind] === "completed" && resultByKind[kind] && (
-              <div className="space-y-3 rounded-xl border p-4">
-                <p className="text-sm">Label: <span className="font-medium">{resultByKind[kind]!.label}</span></p>
-                <p className="text-sm">Trust score: <span className="font-medium">{resultByKind[kind]!.trust_score}%</span></p>
-                <button
-                  onClick={() => router.push(`/report/mock-${Date.now()}`)}
-                  className="rounded-full bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
-                >
-                  View Detailed Report
-                </button>
+              <div className="space-y-4 rounded-2xl border-2 border-purple-600/20 bg-white dark:bg-gray-900 p-6">
+                <h3 className="text-lg font-semibold">Analysis Complete</h3>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="rounded-xl bg-purple-50/30 dark:bg-purple-950/20 p-4 border border-purple-600/10">
+                    <p className="text-xs uppercase tracking-wide text-foreground/60 mb-1">Label</p>
+                    <p className="text-base font-semibold">{resultByKind[kind]!.label}</p>
+                  </div>
+                  <div className="rounded-xl bg-purple-50/30 dark:bg-purple-950/20 p-4 border border-purple-600/10">
+                    <p className="text-xs uppercase tracking-wide text-foreground/60 mb-1">Trust Score</p>
+                    <p className="text-2xl font-bold text-purple-600">{resultByKind[kind]!.trust_score}%</p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => router.push(`/report/mock-${Date.now()}`)}
+                    className="flex-1 rounded-full bg-purple-600 px-6 py-3 text-white hover:bg-purple-700 transition-all hover:-translate-y-0.5 font-medium"
+                  >
+                    View Detailed Report
+                  </button>
+                  <button
+                    onClick={() => {
+                      setStatusByKind((s) => ({ ...s, [kind]: "idle" }));
+                      setResultByKind((r) => ({ ...r, [kind]: null }));
+                      if (kind === "text") setTextInput("");
+                    }}
+                    className="rounded-full border-2 border-purple-600/30 bg-white px-6 py-3 text-purple-600 hover:bg-purple-600/10 transition-all font-medium"
+                  >
+                    New Analysis
+                  </button>
+                </div>
               </div>
             )}
           </Tabs.Content>

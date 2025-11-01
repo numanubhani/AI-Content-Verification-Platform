@@ -35,17 +35,17 @@ export default function AuthPage() {
             <label className="block text-sm">Password</label>
             <input className="mt-1 w-full rounded-lg border px-3 py-2" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-          <button className="w-full rounded-full bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700">
+          <button className="w-full rounded-full bg-purple-600 px-4 py-2 text-white hover:bg-purple-700">
             {mode === "login" ? "Continue" : "Create account"}
           </button>
         </form>
         <div className="mt-4 text-center text-sm text-foreground/70">
           {mode === "login" ? (
-            <button onClick={() => setMode("signup")} className="text-emerald-600 underline">
-              Don’t have an account? Sign up
+            <button onClick={() => setMode("signup")} className="text-purple-600 underline">
+              Don't have an account? Sign up
             </button>
           ) : (
-            <button onClick={() => setMode("login")} className="text-emerald-600 underline">
+            <button onClick={() => setMode("login")} className="text-purple-600 underline">
               Already have an account? Log in
             </button>
           )}

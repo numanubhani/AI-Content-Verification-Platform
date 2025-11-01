@@ -27,7 +27,7 @@ export default function PricingPage() {
             <a
               href="/checkout"
               onClick={() => selectPlan(p.key as any)}
-              className="mt-6 block w-full rounded-full bg-emerald-600 px-4 py-2 text-center text-white hover:bg-emerald-700"
+              className="mt-6 block w-full rounded-full bg-purple-600 px-4 py-2 text-center text-white hover:bg-purple-700"
             >
               Start Free Trial
             </a>

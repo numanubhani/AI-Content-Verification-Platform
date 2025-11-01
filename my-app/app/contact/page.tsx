@@ -19,8 +19,8 @@ export default function ContactPage() {
           <label className="block text-sm">Message</label>
           <textarea className="mt-1 w-full rounded-lg border px-3 py-2" rows={4} required />
         </div>
-        <button className="rounded-full bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700">Send</button>
-        {sent && <p className="text-sm text-emerald-600">Thanks! We will get back to you.</p>}
+        <button className="rounded-full bg-purple-600 px-4 py-2 text-white hover:bg-purple-700">Send</button>
+        {sent && <p className="text-sm text-purple-600">Thanks! We will get back to you.</p>}
       </form>
     </div>
   );
