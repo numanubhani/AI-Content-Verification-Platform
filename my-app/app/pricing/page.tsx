@@ -1,6 +1,7 @@
 "use client";
 
 import { useBillingStore } from "@/store/billing";
+import Link from "next/link";
 
 const plans = [
   { key: "basic", name: "Basic", price: "$9.90", features: ["100 checks/mo", "Email support"] },
@@ -24,13 +25,13 @@ export default function PricingPage() {
                 <li key={f}>• {f}</li>
               ))}
             </ul>
-            <a
-              href="/checkout"
+            <Link
+              href={`/checkout?plan=${p.key}`}
               onClick={() => selectPlan(p.key as any)}
               className="mt-6 block w-full rounded-full bg-purple-600 px-4 py-2 text-center text-white hover:bg-purple-700"
             >
-              Start Free Trial
-            </a>
+              Purchase now
+            </Link>
           </div>
         ))}
       </div>
