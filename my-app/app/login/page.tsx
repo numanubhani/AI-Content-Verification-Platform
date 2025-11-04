@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useAuthStore } from "@/store/auth";
 
 export default function LoginPage() {
@@ -41,6 +42,23 @@ export default function LoginPage() {
           <input className="mt-1 w-full rounded-lg border px-3 py-2" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <button className="w-full rounded-full bg-purple-600 px-4 py-2 text-white hover:bg-purple-700">Continue</button>
+        <div className="flex items-center gap-3">
+          <div className="h-px flex-1 bg-foreground/10" />
+          <span className="text-xs text-foreground/50">or</span>
+          <div className="h-px flex-1 bg-foreground/10" />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <button type="button" className="inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm">
+            <span>Continue with Google</span>
+          </button>
+          <button type="button" className="inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm">
+            <span>Continue with GitHub</span>
+          </button>
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <Link className="text-purple-600 hover:underline" href="/reset">Forgot password?</Link>
+          <Link className="text-foreground/70 hover:underline" href="/signup">Create account</Link>
+        </div>
       </form>
     </div>
   );
