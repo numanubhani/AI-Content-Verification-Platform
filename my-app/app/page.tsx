@@ -48,14 +48,11 @@ export default function HomePage() {
             AI-Powered Content Verification
           </div>
           <h1 className="mt-6 text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl">
-            Verify Authenticity in
-            <span className="block text-purple-600">
-              Seconds, Not Days
-            </span>
+            AI Content Verification for Media & Education
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-xl text-foreground/70">
-            Detect AI-generated content across text, images, and videos with cutting-edge machine learning. 
-            Trusted by media companies and educational institutions worldwide.
+            Check texts, photos, and videos for the use of artificial intelligence. For editorial offices, educational platforms,
+            and teams that value trust.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link 

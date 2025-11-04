@@ -35,10 +35,12 @@ export default function UploadPage() {
   
   // Usage tracking
   const user = useAuthStore((s) => s.user);
-  const checkLimitReached = useUsageStore((s) => s.checkLimitReached);
-  const incrementUsage = useUsageStore((s) => s.incrementUsage);
+  const checkLimitReachedKind = useUsageStore((s) => s.checkLimitReachedKind);
+  const incrementUsageKind = useUsageStore((s) => s.incrementUsageKind);
   const analysisCount = useUsageStore((s) => s.analysisCount);
   const freeLimit = useUsageStore((s) => s.freeLimit);
+  const countsByKind = useUsageStore((s) => s.countsByKind);
+  const limitsByKind = useUsageStore((s) => s.limitsByKind);
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -46,9 +48,9 @@ export default function UploadPage() {
   }, [statusByKind]);
 
   async function simulateAnalysis(kind: "text" | "image" | "video") {
-    // Check if limit reached (only for free users)
+    // Check if per-kind limit reached (only for free users)
     const isPaidUser = user && user.plan !== "free";
-    if (!isPaidUser && checkLimitReached()) {
+    if (!isPaidUser && checkLimitReachedKind(kind)) {
       setShowLimitModal(true);
       setStatusByKind((s) => ({ ...s, [kind]: "idle" }));
       return;
@@ -56,7 +58,7 @@ export default function UploadPage() {
 
     // Increment usage counter (only for free users)
     if (!isPaidUser) {
-      incrementUsage();
+      incrementUsageKind(kind);
     }
 
     setStatusByKind((s) => ({ ...s, [kind]: "analyzing" }));
@@ -229,8 +231,8 @@ export default function UploadPage() {
       <LimitModal
         isOpen={showLimitModal}
         onClose={() => setShowLimitModal(false)}
-        currentCount={analysisCount}
-        limit={freeLimit}
+        currentCount={countsByKind[activeTab]}
+        limit={limitsByKind[activeTab]}
       />
     </div>
   );
