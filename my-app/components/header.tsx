@@ -55,7 +55,7 @@ export function Header() {
                 )}
               </div>
             ) : (
-              <Link href="/auth" className="hover:opacity-80">Login</Link>
+              <Link href="/login" className="hover:opacity-80">Login</Link>
             )}
             <ThemeToggle />
           </nav>
@@ -96,7 +96,7 @@ export function Header() {
                 </button>
               </>
             ) : (
-              <Link href="/auth" className="py-1" onClick={() => setOpen(false)}>Login</Link>
+              <Link href="/login" className="py-1" onClick={() => setOpen(false)}>Login</Link>
             )}
           </nav>
         </div>
