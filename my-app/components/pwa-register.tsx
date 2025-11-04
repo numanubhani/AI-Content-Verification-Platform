@@ -5,19 +5,12 @@ import { useEffect } from "react";
 export function PWARegister() {
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const isLocalhost = Boolean(
-      window.location.hostname === "localhost" ||
-      window.location.hostname === "127.0.0.1" ||
-      window.location.hostname === "[::1]"
-    );
     if (!("serviceWorker" in navigator)) return;
-    // Register even on localhost so you can test offline locally
+    // In development, avoid registering to prevent caching dev chunks
+    const isLocalhost = ["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname);
+    if (process.env.NODE_ENV !== 'production' || isLocalhost) return;
     const swUrl = "/sw.js";
-    navigator.serviceWorker
-      .register(swUrl)
-      .catch(() => {
-        // no-op
-      });
+    navigator.serviceWorker.register(swUrl).catch(() => {});
     // Optional: force update check on visibility change
     const onVisible = () => {
       if (navigator.serviceWorker?.controller) {

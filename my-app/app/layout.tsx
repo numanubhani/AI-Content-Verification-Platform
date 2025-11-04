@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { PWARegister } from '@/components/pwa-register';
+import { PWAInstallPrompt } from '@/components/pwa-install-prompt';
 import { FingerprintProvider } from '@/components/fingerprint-provider';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <FingerprintProvider>
             <PWARegister />
             <Header />
+            <PWAInstallPrompt />
             <main className="mx-auto max-w-6xl px-4 py-8">
               {children}
             </main>

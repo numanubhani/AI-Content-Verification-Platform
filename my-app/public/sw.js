@@ -1,5 +1,5 @@
-/* Basic offline-first service worker */
-const CACHE_NAME = 'aiverify-cache-v1';
+/* Basic offline-first service worker with safe dev behavior */
+const CACHE_NAME = 'aiverify-cache-v2';
 const CORE_ASSETS = [
   '/',
   '/manifest.webmanifest',
@@ -30,6 +30,14 @@ self.addEventListener('message', (event) => {
 // Network-first for HTML; cache-first for static assets
 self.addEventListener('fetch', (event) => {
   const { request } = event;
+  if (request.method !== 'GET') return; // ignore non-GET
+
+  const url = new URL(request.url);
+  // Never handle Next.js dev assets or HMR chunks
+  if (url.pathname.startsWith('/_next/') || url.pathname.startsWith('/__nextjs')) {
+    return; // let the network handle
+  }
+
   const isNavigation = request.mode === 'navigate';
   if (isNavigation) {
     event.respondWith(
