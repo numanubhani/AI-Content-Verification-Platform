@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import { Shield, Users, Activity, Globe, TrendingUp, AlertTriangle, CheckCircle } from "lucide-react";
@@ -18,8 +18,8 @@ export default function AdminPage() {
 
   if (!user || user.plan !== "enterprise") return null;
 
-  // Mock admin data
-  const mockStats = {
+  // Mock admin data (memoized to avoid recomputation)
+  const mockStats = useMemo(() => ({
     totalUsers: 15247,
     activeUsers: 8432,
     totalAnalyses: 1254809,
@@ -46,9 +46,9 @@ export default function AdminPage() {
       { id: 4, type: "analysis", user: "demo@example.com", plan: "basic", time: "18 mins ago", ip: "192.168.1.2" },
       { id: 5, type: "analysis", user: "trial@example.com", plan: "free", time: "25 mins ago", ip: "10.0.0.2" },
     ],
-  };
+  }), []);
 
-  const successRate = ((mockStats.successfulAnalyses / mockStats.totalAnalyses) * 100).toFixed(2);
+  const successRate = useMemo(() => ((mockStats.successfulAnalyses / mockStats.totalAnalyses) * 100).toFixed(2), [mockStats]);
 
   return (
     <div className="space-y-8">

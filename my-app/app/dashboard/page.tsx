@@ -6,7 +6,8 @@ import { useHistoryStore } from "@/store/history";
 import { useUsageStore } from "@/store/usage";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { FileText, TrendingUp, Shield, Clock, ArrowRight, Crown, Users, Activity, Settings, Key, Lock, LogOut } from "lucide-react";
+import { FileText, TrendingUp, Shield, Clock, ArrowRight, Crown, Activity, Settings, Key, Lock, LogOut } from "lucide-react";
+import { useMemo } from "react";
 
 export default function DashboardPage() {
   const user = useAuthStore((s) => s.user);
@@ -19,22 +20,45 @@ export default function DashboardPage() {
   const [show2FADialog, setShow2FADialog] = useState(false);
 
   useEffect(() => {
-    if (!user) router.push("/login");
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+    // Redirect enterprise (admin) users to the admin dashboard to avoid mixing views
+    if (user.plan === "enterprise") {
+      router.push("/admin");
+    }
   }, [user, router]);
 
   if (!user) return null;
+  // Prevent rendering while redirecting admin users
+  if (user.plan === "enterprise") return null;
 
   const isPaidUser = user.plan !== "free";
-  const recentItems = items.slice(0, 5);
-  
-  // Calculate stats
-  const totalAnalyses = items.length;
-  const avgTrustScore = items.length > 0 
-    ? Math.round(items.reduce((acc, item) => acc + item.trust_score, 0) / items.length)
-    : 0;
-  const textCount = items.filter(item => item.kind === "text").length;
-  const imageCount = items.filter(item => item.kind === "image").length;
-  const videoCount = items.filter(item => item.kind === "video").length;
+  const recentItems = useMemo(() => items.slice(0, 5), [items]);
+
+  // Calculate stats (memoized to avoid recomputation on unrelated state changes)
+  const { totalAnalyses, avgTrustScore, textCount, imageCount, videoCount } = useMemo(() => {
+    const total = items.length;
+    if (total === 0) {
+      return { totalAnalyses: 0, avgTrustScore: 0, textCount: 0, imageCount: 0, videoCount: 0 };
+    }
+    let trustSum = 0;
+    let text = 0, image = 0, video = 0;
+    for (const item of items) {
+      trustSum += item.trust_score;
+      if (item.kind === "text") text++;
+      else if (item.kind === "image") image++;
+      else if (item.kind === "video") video++;
+    }
+    return {
+      totalAnalyses: total,
+      avgTrustScore: Math.round(trustSum / total),
+      textCount: text,
+      imageCount: image,
+      videoCount: video,
+    };
+  }, [items]);
 
   return (
     <div className="space-y-8">
