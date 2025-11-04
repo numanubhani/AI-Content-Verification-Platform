@@ -51,7 +51,7 @@ export default function ReportPage() {
       <div className="grid gap-6 rounded-3xl border-2 border-purple-600/20 bg-white dark:bg-gray-900 p-8 md:grid-cols-2">
         <div className="relative flex items-center justify-center">
           <div className="h-72 w-72">
-            <ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
               <RadialBarChart innerRadius="70%" outerRadius="100%" data={[{ name: "score", value: trust }]}> 
                 <RadialBar 
                   background 
@@ -116,7 +116,7 @@ export default function ReportPage() {
             <Info className="h-5 w-5 text-foreground/40" />
           </div>
           <div className="mt-4 h-64">
-            <ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie 
                   data={radialData} 
@@ -143,7 +143,7 @@ export default function ReportPage() {
             <Info className="h-5 w-5 text-foreground/40" />
           </div>
           <div className="mt-4 h-64">
-            <ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={breakdown} layout="vertical">
                 <XAxis type="number" hide />
                 <YAxis dataKey="name" type="category" width={80} />

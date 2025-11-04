@@ -16,8 +16,16 @@ export default function PricingPage() {
     <div>
       <h1 className="text-2xl font-semibold">Pricing</h1>
       <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {plans.map((p) => (
-          <div key={p.name} className="rounded-2xl border p-6 shadow-sm transition hover:shadow-md">
+        {plans.map((p, idx) => {
+          const isPopular = idx === 1; // mark second card as Popular
+          return (
+          <div
+            key={p.name}
+            className={`relative rounded-2xl p-6 shadow-sm transition hover:shadow-md border ${isPopular ? 'border-2 border-purple-600' : ''}`.trim() || 'rounded-2xl border p-6 shadow-sm transition hover:shadow-md'}
+          >
+            {isPopular && (
+              <div className="absolute -top-3 right-3 rounded-full bg-purple-600 px-3 py-1 text-xs font-semibold text-white shadow">Popular</div>
+            )}
             <h3 className="text-lg font-medium">{p.name}</h3>
             <div className="mt-2 text-3xl font-bold">{p.price}</div>
             <ul className="mt-4 space-y-2 text-sm text-foreground/70">
@@ -33,7 +41,8 @@ export default function PricingPage() {
               Purchase now
             </Link>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
