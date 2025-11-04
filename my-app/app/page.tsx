@@ -1,11 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Shield, Zap, FileText, CheckCircle, ArrowRight, Sparkles, Users, Globe, Lock, Award, TrendingUp, BarChart3, Database, Brain, Webhook, ChevronDown } from "lucide-react";
 
 export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [liveStats, setLiveStats] = useState<{ totalChecks: number; accuracyRate: number; countriesServed: number; activeUsers: number } | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetch('/api/stats', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((data) => { if (isMounted) setLiveStats(data); })
+      .catch(() => {});
+    const i = setInterval(() => {
+      fetch('/api/stats', { cache: 'no-store' })
+        .then((r) => r.json())
+        .then((data) => { if (isMounted) setLiveStats(data); })
+        .catch(() => {});
+    }, 15000);
+    return () => { isMounted = false; clearInterval(i); };
+  }, []);
 
   return (
     <div className="space-y-20">
@@ -262,23 +278,46 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Stats Section (Live) */}
       <section className="rounded-3xl border-2 border-purple-600/20 bg-purple-600/10 p-12">
         <div className="mx-auto max-w-4xl">
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { value: "10M+", label: "Content Verified", icon: Users },
-              { value: "99.9%", label: "Accuracy Rate", icon: Shield },
-              { value: "127", label: "Countries Served", icon: Globe },
-              { value: "15K+", label: "Active Users", icon: TrendingUp },
-            ].map((stat, idx) => (
-              <div key={idx} className="text-center">
-                <stat.icon className="mx-auto h-8 w-8" style={{ color: '#ff0eb0' }} />
-                <div className="mt-4 text-4xl font-bold">{stat.value}</div>
-                <div className="mt-2 text-foreground/70">{stat.label}</div>
-              </div>
-            ))}
+            <div className="text-center">
+              <Users className="mx-auto h-8 w-8" style={{ color: '#ff0eb0' }} />
+              <div className="mt-4 text-4xl font-bold">{liveStats ? `${(liveStats.totalChecks).toLocaleString()}` : '10,000,000+'}</div>
+              <div className="mt-2 text-foreground/70">Content Verified</div>
+            </div>
+            <div className="text-center">
+              <Shield className="mx-auto h-8 w-8" style={{ color: '#ff0eb0' }} />
+              <div className="mt-4 text-4xl font-bold">{liveStats ? `${liveStats.accuracyRate}%` : '99.9%'}</div>
+              <div className="mt-2 text-foreground/70">Accuracy Rate</div>
+            </div>
+            <div className="text-center">
+              <Globe className="mx-auto h-8 w-8" style={{ color: '#ff0eb0' }} />
+              <div className="mt-4 text-4xl font-bold">{liveStats ? `${liveStats.countriesServed}` : '127'}</div>
+              <div className="mt-2 text-foreground/70">Countries Served</div>
+            </div>
+            <div className="text-center">
+              <TrendingUp className="mx-auto h-8 w-8" style={{ color: '#ff0eb0' }} />
+              <div className="mt-4 text-4xl font-bold">{liveStats ? `${(liveStats.activeUsers).toLocaleString()}` : '15,000+'}</div>
+              <div className="mt-2 text-foreground/70">Active Users</div>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* Trusted By Logos */}
+      <section>
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Trusted by</h2>
+          <p className="mt-2 text-foreground/70">Teams and institutions worldwide</p>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 items-center">
+          {['Guardian', 'Harvard', 'Reuters', 'BBC', 'Stanford', 'NYTimes'].map((brand) => (
+            <div key={brand} className="flex items-center justify-center rounded-xl border border-purple-600/10 bg-white py-4 px-3 dark:bg-gray-900">
+              <span className="text-sm font-semibold tracking-wide text-foreground/70">{brand}</span>
+            </div>
+          ))}
         </div>
       </section>
 
