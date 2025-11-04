@@ -9,6 +9,7 @@ import { useHistoryStore } from "@/store/history";
 import { useUsageStore } from "@/store/usage";
 import { useAuthStore } from "@/store/auth";
 import { LimitModal } from "@/components/limit-modal";
+import { ReportPanel } from "@/components/report-panel";
 
 const Dashboard = dynamic(() => import("@/components/upload-dashboard"), { ssr: false });
 
@@ -193,19 +194,13 @@ export default function UploadPage() {
                 )}
 
                 {statusByKind[activeTab] === "completed" && resultByKind[activeTab] && (
-                  <div className="mt-6 space-y-4 rounded-2xl border-2 border-purple-600/20 bg-white dark:bg-gray-900 p-6">
-                    <h3 className="text-lg font-semibold">Analysis Complete</h3>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="rounded-xl border border-purple-600/10 bg-purple-50/30 p-4 dark:bg-purple-950/20">
-                        <p className="mb-1 text-xs uppercase tracking-wide text-foreground/60">Label</p>
-                        <p className="text-base font-semibold">{resultByKind[activeTab]!.label}</p>
-                      </div>
-                      <div className="rounded-xl border border-purple-600/10 bg-purple-50/30 p-4 dark:bg-purple-950/20">
-                        <p className="mb-1 text-xs uppercase tracking-wide text-foreground/60">Trust Score</p>
-                        <p className="text-2xl font-bold text-purple-600">{resultByKind[activeTab]!.trust_score}%</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-3">
+                  <div className="mt-6">
+                    <ReportPanel
+                      kind={activeTab}
+                      originalText={activeTab === "text" ? textInput : undefined}
+                      result={resultByKind[activeTab]!}
+                    />
+                    <div className="mt-4 flex gap-3">
                       <button
                         onClick={() => router.push(`/report/mock-${Date.now()}`)}
                         className="flex-1 rounded-full bg-purple-600 px-6 py-3 font-medium text-white transition-all hover:-translate-y-0.5 hover:bg-purple-700"
