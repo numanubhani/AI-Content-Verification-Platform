@@ -30,11 +30,7 @@ export default function DashboardPage() {
     }
   }, [user, router]);
 
-  if (!user) return null;
-  // Prevent rendering while redirecting admin users
-  if (user.plan === "enterprise") return null;
-
-  const isPaidUser = user.plan !== "free";
+  const isPaidUser = user ? user.plan !== "free" : false;
   const recentItems = useMemo(() => items.slice(0, 5), [items]);
 
   // Calculate stats (memoized to avoid recomputation on unrelated state changes)
@@ -59,6 +55,9 @@ export default function DashboardPage() {
       videoCount: video,
     };
   }, [items]);
+
+  // Block UI render while unauthenticated or while redirecting admins
+  if (!user || user.plan === "enterprise") return null;
 
   return (
     <div className="space-y-8">

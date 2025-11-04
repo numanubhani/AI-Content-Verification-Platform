@@ -11,8 +11,15 @@ export default function SignupPage() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const signup = useAuthStore((s) => s.signup);
+  const user = useAuthStore((s) => s.user);
   const router = useRouter();
   useEffect(() => setError(null), [email, password, confirm]);
+  useEffect(() => {
+    if (user) {
+      if (user.plan === "enterprise") router.push("/admin");
+      else router.push("/dashboard");
+    }
+  }, [user, router]);
   return (
     <div className="mx-auto max-w-md">
       <h1 className="text-2xl font-semibold">Sign up</h1>
