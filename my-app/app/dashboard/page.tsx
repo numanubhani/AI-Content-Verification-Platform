@@ -45,6 +45,7 @@ export default function DashboardPage() {
       trustSum += item.trust_score;
       if (item.kind === "text") text++;
       else if (item.kind === "image") image++;
+      
       else if (item.kind === "video") video++;
     }
     return {
