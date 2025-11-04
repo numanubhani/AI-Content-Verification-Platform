@@ -21,10 +21,16 @@ export default function PricingPage() {
           return (
           <div
             key={p.name}
-            className={`relative rounded-2xl p-6 shadow-sm transition hover:shadow-md border ${isPopular ? 'border-2 border-purple-600' : ''}`.trim() || 'rounded-2xl border p-6 shadow-sm transition hover:shadow-md'}
+            className={`relative overflow-hidden rounded-2xl p-6 border ${
+              isPopular
+                ? 'border-2 border-purple-600 shadow-[0_0_40px_rgba(139,92,246,0.35)]'
+                : 'shadow-sm'
+            }`}
           >
             {isPopular && (
-              <div className="absolute -top-3 right-3 rounded-full bg-purple-600 px-3 py-1 text-xs font-semibold text-white shadow">Popular</div>
+              <div className="pointer-events-none absolute -right-12 top-3 rotate-45">
+                <div className="bg-purple-600 text-white text-xs font-semibold py-1 px-16 shadow">POPULAR</div>
+              </div>
             )}
             <h3 className="text-lg font-medium">{p.name}</h3>
             <div className="mt-2 text-3xl font-bold">{p.price}</div>
