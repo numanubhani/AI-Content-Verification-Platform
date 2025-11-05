@@ -8,6 +8,8 @@ import { useAuthStore } from "@/store/auth";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const user = useAuthStore((s) => s.user);
   const login = useAuthStore((s) => s.login);
   const router = useRouter();
@@ -29,7 +31,15 @@ export default function LoginPage() {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          await login(email, password);
+          setError(null);
+          setLoading(true);
+          try {
+            await login(email, password);
+          } catch (err: any) {
+            setError(err.message || "Login failed. Please check your credentials.");
+          } finally {
+            setLoading(false);
+          }
         }}
         className="mt-6 space-y-4 rounded-2xl border p-6"
       >
@@ -41,7 +51,16 @@ export default function LoginPage() {
           <label className="block text-sm">Password</label>
           <input className="mt-1 w-full rounded-lg border px-3 py-2" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
-        <button className="w-full rounded-full bg-purple-600 px-4 py-2 text-white hover:bg-purple-700">Continue</button>
+        {error && (
+          <div className="rounded-md bg-red-50 text-red-700 text-sm p-2">{error}</div>
+        )}
+        <button 
+          type="submit"
+          disabled={loading}
+          className="w-full rounded-full bg-purple-600 px-4 py-2 text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? "Logging in..." : "Continue"}
+        </button>
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-foreground/10" />
           <span className="text-xs text-foreground/50">or</span>
