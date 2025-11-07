@@ -8,7 +8,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2 font-semibold">
-            <span className="inline-block h-5 w-5 rounded bg-gradient-to-br from-emerald-500 to-sky-500" />
+            <span className="inline-block h-5 w-5 rounded bg-purple-600" />
             AI Verify
           </div>
           <p className="mt-3 text-sm text-foreground/70">AI content verification for media and education.</p>

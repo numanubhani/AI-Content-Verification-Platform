@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Uppy from "@uppy/core";
 import Dashboard from "@uppy/dashboard";
+import ThumbnailGenerator from "@uppy/thumbnail-generator";
 // We mock upload client-side to avoid browser XHR progress/runtime quirks
 import "@uppy/core/dist/style.min.css";
 import "@uppy/dashboard/dist/style.min.css";
@@ -24,6 +25,8 @@ export default function UploadDashboard({
           kind === "text" ? [".txt", ".md", ".pdf"] : kind === "image" ? ["image/*"] : ["video/*"],
       },
     })
+      // generate previews so users can see selected images/videos in the dashboard area
+      .use(ThumbnailGenerator, { thumbnailWidth: 320 })
       .use(Dashboard, {
         inline: true,
         target: "#uppy-root-" + kind,
@@ -58,7 +61,7 @@ export default function UploadDashboard({
     };
   }, [kind, onStart, onComplete]);
 
-  return <div id={"uppy-root-" + kind} className="rounded-xl border p-2" />;
+  return <div id={"uppy-root-" + kind} />;
 }
 
 

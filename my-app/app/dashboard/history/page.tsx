@@ -30,7 +30,7 @@ export default function HistoryPage() {
         <div className="rounded-2xl border p-10 text-center">
           <div className="text-lg font-medium">No reports yet</div>
           <p className="mt-1 text-sm text-foreground/70">Upload a file to generate your first report.</p>
-          <Link href="/upload" className="mt-4 inline-block rounded-full bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700">Go to Upload</Link>
+          <Link href="/upload" className="mt-4 inline-block rounded-full bg-purple-600 px-4 py-2 text-white hover:bg-purple-700">Go to Upload</Link>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

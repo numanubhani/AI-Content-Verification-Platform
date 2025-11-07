@@ -4,16 +4,166 @@
 
 :root {
   --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+  --foreground: 0 0% 8%;
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
+  --background: 0 0% 8%;
+  --foreground: 0 0% 98%;
 }
 
 html, body {
   height: 100%;
+}
+
+/* Uppy Dashboard dark mode styles */
+.dark .uppy-Dashboard {
+  background: rgb(17, 24, 39) !important;
+  color: rgb(243, 244, 246) !important;
+}
+
+.dark .uppy-Dashboard * {
+  color: inherit !important;
+}
+
+.dark .uppy-Dashboard-inner {
+  background: rgb(17, 24, 39) !important;
+}
+
+.dark .uppy-DashboardContent-bar {
+  background: rgb(17, 24, 39) !important;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2) !important;
+}
+
+.dark .uppy-DashboardTab[aria-selected="false"] {
+  color: rgb(156, 163, 175) !important;
+}
+
+.dark .uppy-DashboardTab[aria-selected="true"] {
+  color: rgb(139, 92, 246) !important;
+  border-bottom-color: rgb(139, 92, 246) !important;
+}
+
+.dark .uppy-Dashboard-dropFilesHereHint,
+.dark .uppy-Dashboard-filesContainer,
+.dark .uppy-DashboardContent-addMore {
+  color: rgb(243, 244, 246) !important;
+}
+
+.dark .uppy-Dashboard-browse {
+  color: rgb(139, 92, 246) !important;
+}
+
+.dark .uppy-Dashboard-browse:focus,
+.dark .uppy-Dashboard-browse:hover {
+  background: rgba(139, 92, 246, 0.1) !important;
+  color: rgb(167, 139, 250) !important;
+}
+
+.dark .uppy-Dashboard-note {
+  color: rgb(156, 163, 175) !important;
+}
+
+.dark .uppy-DashboardContent-panel {
+  background: rgb(17, 24, 39) !important;
+}
+
+.dark .uppy-DashboardItem {
+  background: rgb(31, 41, 55) !important;
+  border: 1px solid rgba(139, 92, 246, 0.2) !important;
+}
+
+.dark .uppy-DashboardItem-name {
+  color: rgb(243, 244, 246) !important;
+}
+
+.dark .uppy-DashboardItem-status {
+  color: rgb(156, 163, 175) !important;
+}
+
+.dark .uppy-ProgressBar {
+  background: rgba(139, 92, 246, 0.2) !important;
+}
+
+.dark .uppy-ProgressBar-inner {
+  background: rgb(139, 92, 246) !important;
+}
+
+.dark .uppy-DashboardItem-action {
+  color: rgb(156, 163, 175) !important;
+}
+
+.dark .uppy-DashboardItem-action:hover {
+  color: rgb(139, 92, 246) !important;
+  background: rgba(139, 92, 246, 0.1) !important;
+}
+
+.dark .uppy-Dashboard-AddFilesPanel {
+  background: rgb(17, 24, 39) !important;
+}
+
+.dark .uppy-Dashboard-AddFilesPanel-button {
+  background: rgba(139, 92, 246, 0.1) !important;
+  border: 1px solid rgba(139, 92, 246, 0.3) !important;
+  color: rgb(139, 92, 246) !important;
+}
+
+.dark .uppy-Dashboard-AddFilesPanel-button:hover {
+  background: rgba(139, 92, 246, 0.2) !important;
+  border-color: rgb(139, 92, 246) !important;
+}
+
+.dark .uppy-DashboardFileCard {
+  background: rgb(31, 41, 55) !important;
+  border: 1px solid rgba(139, 92, 246, 0.2) !important;
+}
+
+.dark .uppy-DashboardFileCard-preview {
+  background: rgb(31, 41, 55) !important;
+}
+
+/* Additional Uppy text visibility styles */
+.dark .uppy-DashboardContent-title {
+  color: rgb(243, 244, 246) !important;
+}
+
+.dark .uppy-Dashboard-AddFiles-title,
+.dark .uppy-Dashboard-AddFiles-buttonText {
+  color: rgb(243, 244, 246) !important;
+}
+
+.dark .uppy-DashboardContent-panelMid {
+  color: rgb(243, 244, 246) !important;
+}
+
+.dark .uppy-DashboardContent-panelTitle {
+  color: rgb(243, 244, 246) !important;
+  font-weight: 600 !important;
+}
+
+.dark .uppy-DashboardFileCardName {
+  color: rgb(243, 244, 246) !important;
+  font-weight: 500 !important;
+}
+
+.dark .uppy-DashboardFileCardStatus {
+  color: rgb(156, 163, 175) !important;
+}
+
+.dark .uppy-DashboardFileCardDesc {
+  color: rgb(156, 163, 175) !important;
+}
+
+.dark .uppy-DashboardContent-fileList {
+  background: transparent !important;
+}
+
+.dark .uppy-DashboardContent-empty {
+  color: rgb(243, 244, 246) !important;
+}
+
+.dark .uppy-Dashboard-files {
+  color: rgb(243, 244, 246) !important;
 }
 
 
