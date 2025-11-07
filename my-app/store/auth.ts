@@ -14,15 +14,26 @@ type AuthState = {
   setPlan: (plan: Plan) => void;
 };
 
+// Admin email for admin dashboard access
+const ADMIN_EMAIL = "admin@gmail.com";
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       user: null,
-      async login(email) {
-        set({ user: { id: "u-" + Date.now(), email, plan: "free" } });
+      async login(email: string, password: string) {
+        // Dummy login - any email/password works
+        // admin@gmail.com gets enterprise plan (admin dashboard)
+        const isAdmin = email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+        const plan = isAdmin ? "enterprise" : "free";
+        set({ user: { id: "u-" + Date.now(), email, plan } });
       },
-      async signup(email) {
-        set({ user: { id: "u-" + Date.now(), email, plan: "free" } });
+      async signup(email: string, password: string) {
+        // Dummy signup - any email/password works
+        // admin@gmail.com gets enterprise plan (admin dashboard)
+        const isAdmin = email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+        const plan = isAdmin ? "enterprise" : "free";
+        set({ user: { id: "u-" + Date.now(), email, plan } });
       },
       logout() {
         set({ user: null });

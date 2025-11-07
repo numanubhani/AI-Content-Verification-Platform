@@ -25,11 +25,16 @@ export function Header() {
             <Link href="/about" className="hover:opacity-80">About</Link>
             {user ? (
               <>
-                <Link href="/dashboard/history" className="hover:opacity-80">Dashboard</Link>
+                <Link 
+                  href={user.plan === "enterprise" ? "/admin" : "/dashboard/history"} 
+                  className="hover:opacity-80"
+                >
+                  Dashboard
+                </Link>
                 <button onClick={logout} className="rounded-full border px-3 py-1 hover:bg-foreground/5">Logout</button>
               </>
             ) : (
-              <Link href="/auth" className="hover:opacity-80">Login</Link>
+              <Link href="/login" className="hover:opacity-80">Login</Link>
             )}
             <ThemeToggle />
           </nav>
@@ -53,11 +58,17 @@ export function Header() {
             <Link href="/about" className="py-1" onClick={() => setOpen(false)}>About</Link>
             {user ? (
               <>
-                <Link href="/dashboard/history" className="py-1" onClick={() => setOpen(false)}>Dashboard</Link>
+                <Link 
+                  href={user.plan === "enterprise" ? "/admin" : "/dashboard/history"} 
+                  className="py-1" 
+                  onClick={() => setOpen(false)}
+                >
+                  Dashboard
+                </Link>
                 <button onClick={() => { logout(); setOpen(false); }} className="rounded-full border px-3 py-1">Logout</button>
               </>
             ) : (
-              <Link href="/auth" className="py-1" onClick={() => setOpen(false)}>Login</Link>
+              <Link href="/login" className="py-1" onClick={() => setOpen(false)}>Login</Link>
             )}
           </nav>
         </div>
