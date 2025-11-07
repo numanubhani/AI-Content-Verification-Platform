@@ -2,7 +2,6 @@
 
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { apiClient } from "@/lib/api-client";
 
 type Plan = "free" | "basic" | "pro" | "suite" | "enterprise";
 type User = { id: string; email: string; plan: Plan };
@@ -25,61 +24,31 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       async login(email: string, password: string) {
-        // Call backend API for login
-        const response = await apiClient.login(email, password);
-        const token = response.access_token;
-
-        if (!token) {
-          throw new Error("No token received from server");
-        }
-
-        // Fetch user info from backend
-        const userInfo = await apiClient.getCurrentUser(token) as {
-          id: number;
-          email: string;
-          plan: string;
-          is_active: boolean;
-        };
-
-        // Use plan from backend
-        const plan = (userInfo.plan || "free") as Plan;
-
+        // Dummy login - any email/password works
+        // admin@gmail.com gets enterprise plan (admin dashboard)
+        const isAdmin = email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+        const plan = isAdmin ? "enterprise" : "free";
         set({ 
           user: { 
-            id: String(userInfo.id), 
-            email: userInfo.email, 
+            id: "u-" + Date.now(), 
+            email, 
             plan 
           }, 
-          token 
+          token: "dummy-token" 
         });
       },
       async signup(email: string, password: string) {
-        // Register user in backend - posts data to backend
-        const response = await apiClient.register(email, password);
-        const token = response.access_token;
-
-        if (!token) {
-          throw new Error("No token received from server");
-        }
-
-        // Fetch user info from backend to confirm registration
-        const userInfo = await apiClient.getCurrentUser(token) as {
-          id: number;
-          email: string;
-          plan: string;
-          is_active: boolean;
-        };
-        
-        // Use plan from backend
-        const plan = (userInfo.plan || "free") as Plan;
-
+        // Dummy signup - any email/password works
+        // admin@gmail.com gets enterprise plan (admin dashboard)
+        const isAdmin = email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+        const plan = isAdmin ? "enterprise" : "free";
         set({ 
           user: { 
-            id: String(userInfo.id), 
-            email: userInfo.email, 
+            id: "u-" + Date.now(), 
+            email, 
             plan 
           }, 
-          token 
+          token: "dummy-token" 
         });
       },
       logout() {

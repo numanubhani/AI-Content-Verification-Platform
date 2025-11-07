@@ -6,10 +6,6 @@ export const API_CONFIG = {
   BASE_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
 };
 
-if (!process.env.NEXT_PUBLIC_API_URL) {
-  console.warn("NEXT_PUBLIC_API_URL not set, using default: http://localhost:8000");
-}
-
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: "/api/v1/auth/login",
