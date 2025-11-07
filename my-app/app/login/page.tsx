@@ -12,7 +12,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const user = useAuthStore((s) => s.user);
   const login = useAuthStore((s) => s.login);
-  const user = useAuthStore((s) => s.user);
   const router = useRouter();
 
   useEffect(() => {
